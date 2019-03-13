@@ -25,13 +25,14 @@ FUNCTION (this os) add( ) RETURNS BOOLEAN
 		END IF
 	END FOR
 	CALL m_oss.appendElement()
-	LET this.osId = m_oss.getLength()
-	LET m_oss[ m_oss.getLength() ].* = this.*
+	LET x = m_oss.getLength()
+	LET this.osId = x
+	LET m_oss[x].* = this.*
 	LET m_os.* = this.*
 	RETURN TRUE
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
-FUNCTION (this os) getById(l_id INTEGER) RETURNS BOOLEAN
+FUNCTION (this os) selectByID(l_id INTEGER) RETURNS BOOLEAN
 	DEFINE x SMALLINT
 	LET m_fail_reason = ""
 	INITIALIZE this TO NULL

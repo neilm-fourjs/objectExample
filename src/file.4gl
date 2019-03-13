@@ -35,13 +35,14 @@ FUNCTION (this file) add( ) RETURNS BOOLEAN
 		END IF
 	END FOR
 	CALL m_files.appendElement()
-	LET this.fileId = m_files.getLength()
-	LET m_files[ m_files.getLength() ].* = this.*
+	LET x =  m_files.getLength()
+	LET this.fileId = x
+	LET m_files[x].* = this.*
 	LET m_file.* = this.*
 	RETURN TRUE
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
-FUNCTION (this file) getById(l_id INTEGER) RETURNS BOOLEAN
+FUNCTION (this file) selectByID(l_id INTEGER) RETURNS BOOLEAN
 	DEFINE x SMALLINT
 	LET m_fail_reason = ""
 	INITIALIZE this TO NULL
