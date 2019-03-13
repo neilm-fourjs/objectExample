@@ -65,16 +65,15 @@
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
   <Group id="75644415" label="Group" language="Genero">
-    <Application binaryName="fileController" dependencies="14000,1986,-1729098704" id="18736" label="fileController">
+    <Application binaryName="fileController" dependencies="1986,-1729098704" id="18736" label="fileController">
       <File filePath="src/fileController.4gl"/>
       <File filePath="src/fileController.per"/>
     </Application>
-    <Library binaryName="lib_file" id="-1729098704" label="lib_file">
-      <File filePath="src/file.4gl"/>
-    </Library>
-    <Library binaryName="lib_os" dependencies="1986" id="14000" label="lib_os">
-      <File filePath="src/os.4gl"/>
+    <Library binaryName="libs" id="-1729098704" label="libs">
+      <File filePath="src/files.4gl"/>
+      <File filePath="src/fileType.4gl"/>
       <File filePath="src/os.per"/>
+      <File filePath="src/oss.4gl"/>
     </Library>
   </Group>
 </Project>

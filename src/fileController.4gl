@@ -1,82 +1,60 @@
 
 IMPORT FGL os
-IMPORT FGL file
+IMPORT FGL files
 
-DEFINE m_os os
-DEFINE m_file file
-
-DEFINE m_files DYNAMIC ARRAY OF RECORD
-		fileId INTEGER,
-		fileName STRING,
-		fileOSId INTEGER,
-		fileOSText STRING
-	END RECORD
-
+DEFINE m_oss oss
+DEFINE m_files files
 
 MAIN
-	CALL newOS("CentOS","6")
-	CALL newOS("CentOS","7")
-	CALL newOS("CentOS","7") -- test rejecting duplicate record
-	CALL newOS("Ubuntu","18.10")
+	IF NOT m_oss.add("Linux","64bit","212") THEN DISPLAY m_oss.getError() END IF
+	IF NOT m_oss.add("Linux","64bit","219") THEN DISPLAY m_oss.getError() END IF
+	IF NOT m_oss.add("Linux","32bit","212") THEN DISPLAY m_oss.getError() END IF
+	IF NOT m_oss.add("Linux","arm32","212") THEN DISPLAY m_oss.getError() END IF
+	IF NOT m_oss.add("Windows","64bit","140") THEN DISPLAY m_oss.getError() END IF
 
---	CALL m_file.init( 0, "test", 1, 1, 3, 20, "02" )
+	CALL m_files.init( m_oss )
+	IF NOT m_files.add( "fgl-3.20.02.run", 1, 1, 3, 20, "02" ) THEN DISPLAY m_files.getError() END IF
+	IF NOT m_files.add( "fgl-3.20.03.run", 1, 1, 3, 20, "03" ) THEN DISPLAY m_files.getError() END IF
+	IF NOT m_files.add( "fgl-3.20.02.run", 1, 4, 3, 20, "02" ) THEN DISPLAY m_files.getError() END IF
+	IF NOT m_files.add( "fgl-3.20.03.run", 1, 4, 3, 20, "03" ) THEN DISPLAY m_files.getError() END IF
+	IF NOT m_files.add( "gas-3.20.02.run", 1, 1, 3, 20, "02" ) THEN DISPLAY m_files.getError() END IF
+	IF NOT m_files.add( "gas-3.20.02.run", 1, 1, 3, 20, "02" ) THEN DISPLAY m_files.getError() END IF
+	IF NOT m_files.add( "gre-3.20.02.run", 1, 1, 3, 20, "02" ) THEN DISPLAY m_files.getError() END IF
 
-	CALL newFile("MyFile1.tgz",1)
-	CALL newFile("MyFile2.tgz",2)
-	CALL newFile("MyFile3.tgz",1)
-	CALL newFile("MyFile4.tgz",3)
-	CALL newFile("MyFile4.tgz",4)
-
-	DISPLAY "OS array len:",m_os.getLength(), " File array len:", m_files.getLength()
+	DISPLAY "OS array len:",m_oss.count, " File array len:", m_files.count
 
 	OPEN FORM f FROM "fileController"
 	DISPLAY FORM F
 
-	DISPLAY ARRAY m_files TO arr.*
+	DISPLAY ARRAY m_files.list TO arr.* ATTRIBUTES(UNBUFFERED, ACCEPT=FALSE)
 		BEFORE ROW
-			DISPLAY BY NAME m_files[ arr_curr() ].*
-			IF NOT m_os.selectByID( m_files[ arr_curr() ].fileOSId ) THEN
-				ERROR m_os.getError()
+			LET m_files.current = arr_curr()
+			CALL m_files.display( m_files.current )
+			IF NOT m_oss.selectByID( m_files.list[m_files.current].fileOSId ) THEN
+				ERROR m_oss.getError()
+			ELSE
+				CALL m_oss.display( m_oss.current )
 			END IF
-			CALL m_os.display()
+			DISPLAY "File:",m_files.current," OS:",m_oss.current
 		ON ACTION showOS
-			CALL m_os.showWindow()
+			CALL m_oss.showWindow()
 		ON ACTION upd
-			CALL updateFile(arr_curr())
+			IF m_files.selectByID( arr_curr() ) THEN
+				CALL updateFile(arr_curr())
+			END IF
 	END DISPLAY
 
 END MAIN
 ----------------------------------------------------------------------------------------------------
 FUNCTION updateFile(x SMALLINT)
 	DIALOG ATTRIBUTE(UNBUFFERED)
-		INPUT BY NAME m_files[ x ].* ATTRIBUTES(WITHOUT DEFAULTS)
-		END INPUT
-		SUBDIALOG os.updt
-		ON ACTION CLOSE EXIT DIALOG
-		ON ACTION back EXIT DIALOG
+		SUBDIALOG files.file_input
+		SUBDIALOG os.os_input
+		ON ACTION close LET int_flag = TRUE EXIT DIALOG
+		ON ACTION cancel LET int_flag = TRUE EXIT DIALOG
+		ON ACTION accept LET int_flag = FALSE EXIT DIALOG
 	END DIALOG
-END FUNCTION
-----------------------------------------------------------------------------------------------------
-FUNCTION newFile( l_name STRING, l_os INTEGER)
-	CALL m_files.appendElement()
-	LET m_files[ m_files.getLength() ].fileId =  m_files.getLength()
-	LET m_files[ m_files.getLength() ].fileName = l_name
-	LET m_files[ m_files.getLength() ].fileOSId = l_os
-	IF m_os.selectByID( l_os ) THEN
-		LET m_files[ m_files.getLength() ].fileOSText = m_os.osType," ",m_os.osVersion
-	ELSE
-		LET m_files[ m_files.getLength() ].fileOSText = "OS Not Found!"
-	END IF
-
-END FUNCTION
-----------------------------------------------------------------------------------------------------
-FUNCTION newOS( l_type STRING, l_version STRING)
-	LET m_os.osId = 0
-	LET m_os.osType = l_type
-	LET m_os.osVersion = l_version
-	IF NOT m_os.add() THEN
-		DISPLAY SFMT("Insert of %1 %2 Failed %3",l_type,l_version,m_os.getError())
-	ELSE
-		DISPLAY SFMT("Insert of %1 %2 Okay id is %3",l_type,l_version, m_os.osId)
+	IF NOT int_flag THEN
+		CALL m_files.update()
 	END IF
 END FUNCTION
