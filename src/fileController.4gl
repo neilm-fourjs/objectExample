@@ -1,17 +1,19 @@
 
-IMPORT FGL os
+IMPORT FGL oss
 IMPORT FGL files
 
 DEFINE m_oss oss
 DEFINE m_files files
 
 MAIN
+-- Setup test data for OS's
 	IF NOT m_oss.add("Linux","64bit","212") THEN DISPLAY m_oss.getError() END IF
 	IF NOT m_oss.add("Linux","64bit","219") THEN DISPLAY m_oss.getError() END IF
 	IF NOT m_oss.add("Linux","32bit","212") THEN DISPLAY m_oss.getError() END IF
 	IF NOT m_oss.add("Linux","arm32","212") THEN DISPLAY m_oss.getError() END IF
 	IF NOT m_oss.add("Windows","64bit","140") THEN DISPLAY m_oss.getError() END IF
 
+-- Setup test data for Files
 	CALL m_files.init( m_oss )
 	IF NOT m_files.add( "fgl-3.20.02.run", 1, 1, 3, 20, "02" ) THEN DISPLAY m_files.getError() END IF
 	IF NOT m_files.add( "fgl-3.20.03.run", 1, 1, 3, 20, "03" ) THEN DISPLAY m_files.getError() END IF
@@ -46,15 +48,17 @@ MAIN
 
 END MAIN
 ----------------------------------------------------------------------------------------------------
+-- Update the files record
 FUNCTION updateFile(x SMALLINT)
 	DIALOG ATTRIBUTE(UNBUFFERED)
 		SUBDIALOG files.file_input
-		SUBDIALOG os.os_input
+		SUBDIALOG oss.os_input
 		ON ACTION close LET int_flag = TRUE EXIT DIALOG
 		ON ACTION cancel LET int_flag = TRUE EXIT DIALOG
 		ON ACTION accept LET int_flag = FALSE EXIT DIALOG
 	END DIALOG
 	IF NOT int_flag THEN
 		CALL m_files.update()
+		CALL m_oss.update()
 	END IF
 END FUNCTION

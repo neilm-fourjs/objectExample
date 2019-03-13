@@ -99,7 +99,7 @@ FUNCTION (this oss) display(x SMALLINT) RETURNS ()
 	DISPLAY BY NAME this.list[x].*
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
-FUNCTION (this oss) showWindow()
+FUNCTION (this oss) showWindow() RETURNS ()
 	OPEN WINDOW w_os WITH FORM "os"
 	CALL this.display(this.current)
 	MENU
@@ -107,6 +107,10 @@ FUNCTION (this oss) showWindow()
 		ON ACTION back EXIT MENU
 	END MENU
 	CLOSE WINDOW w_os
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION (this oss) update() RETURNS ()
+	LET this.list[ this.current ].* = m_os.*
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 DIALOG os_input()

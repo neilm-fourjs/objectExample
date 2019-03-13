@@ -2,7 +2,7 @@
 -- Manage a simple List of File objects
 
 &define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
-IMPORT FGL os
+IMPORT FGL oss
 PUBLIC TYPE file RECORD
 		fileId INTEGER,
 		fileName STRING,
