@@ -1,6 +1,6 @@
 
 -- Manage a simple List of File objects
-
+IMPORT util
 &define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
 IMPORT FGL oss
 IMPORT FGL fts
@@ -109,6 +109,18 @@ END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this files) display(x SMALLINT)
 	DISPLAY BY NAME this.list[ x ].*
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION (this files) saveToDisk(l_fileName STRING) RETURNS ()
+	DEFINE l_file TEXT
+	LOCATE l_file IN FILE l_fileName
+	LET l_file = util.JSONObject.fromFGL( this ).toString()
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION (this files) loadFromDisk(l_fileName STRING) RETURNS ()
+	DEFINE l_file TEXT
+	LOCATE l_file IN FILE l_fileName
+	CALL util.JSON.parse( l_file, this )
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 DIALOG file_input()

@@ -75,5 +75,8 @@
       <File filePath="src/os.per"/>
       <File filePath="src/oss.4gl"/>
     </Library>
+    <Application binaryName="setup" id="-958925798" label="setup">
+      <File filePath="src/setup.4gl"/>
+    </Application>
   </Group>
 </Project>

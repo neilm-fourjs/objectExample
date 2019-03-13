@@ -1,6 +1,6 @@
 
 -- Manage a simple List of OS objects.
-
+IMPORT util
 &define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
 
 PUBLIC TYPE os RECORD
@@ -111,6 +111,18 @@ END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this oss) update() RETURNS ()
 	LET this.list[ this.current ].* = m_os.*
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION (this oss) saveToDisk(l_fileName STRING) RETURNS ()
+	DEFINE l_file TEXT
+	LOCATE l_file IN FILE l_fileName
+	LET l_file = util.JSONObject.fromFGL( this ).toString()
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION (this oss) loadFromDisk(l_fileName STRING) RETURNS ()
+	DEFINE l_file TEXT
+	LOCATE l_file IN FILE l_fileName
+	CALL util.JSON.parse( l_file, this )
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 DIALOG os_input()
