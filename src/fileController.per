@@ -1,4 +1,10 @@
 
+ACTION DEFAULTS
+	ACTION cancel ( TEXT="Exit" )
+	ACTION showos ( TEXT="Show OS" )
+	ACTION upd ( TEXT="Update" )
+END -- AD
+
 LAYOUT (TEXT="File Controller")
 VBOX
 TABLE
@@ -14,9 +20,9 @@ GRID
 {
 File Id: [f000   ]
 File:    [f001                     ]
-FileType:[f002      ]
-Version: [f003].[f004].[f005]
-OS:      [o001          ]/[o002            ][o003]
+FileType:[f002:f002a                              ]
+Version: [f003:".":f004:".":f005]
+OS:      [o001          :"/":o002            :o003]
 }
 END -- GRID
 END -- VBOX
@@ -26,6 +32,7 @@ ATTRIBUTES
 PHANTOM FORMONLY.a_fileId;
 a001 = FORMONLY.a_fileName, TITLE="Name";
 PHANTOM FORMONLY.a_fileTypeId;
+PHANTOM FORMONLY.a_fileTypeText;
 PHANTOM FORMONLY.a_osId;
 a002 = FORMONLY.a_fileOSText, TITLE="OS";
 PHANTOM FORMONLY.a_fileVerMajor;
@@ -37,12 +44,16 @@ a003 = FORMONLY.a_fileVerison, TITLE="Version";
 f000 = FORMONLY.fileId;
 f001 = FORMONLY.fileName;
 f002 = FORMONLY.fileTypeId;
+PHANTOM FORMONLY.fileTypeText;
 PHANTOM FORMONLY.fileOSId;
 PHANTOM FORMONLY.fileOSText;
 f003 = FORMONLY.fileVerMajor;
 f004 = FORMONLY.fileVerMinor;
 f005 = FORMONLY.fileVerPatch;
 PHANTOM FORMONLY.fileVersion;
+
+PHANTOM FORMONLY.ftId;
+f002a = FORMONLY.ftText;
 
 PHANTOM FORMONLY.osId;
 o001 = FORMONLY.osType;
@@ -54,6 +65,7 @@ SCREEN RECORD arr (
 	FORMONLY.a_fileId, 
 	FORMONLY.a_fileName, 
 	FORMONLY.a_fileTypeId,
+	FORMONLY.a_fileTypeText,
 	FORMONLY.a_osId, 
 	FORMONLY.a_fileOSText,
 	FORMONLY.a_fileVerMajor,

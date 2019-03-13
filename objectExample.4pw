@@ -71,6 +71,7 @@
     </Application>
     <Library binaryName="libs" id="-1729098704" label="libs">
       <File filePath="src/files.4gl"/>
+      <File filePath="src/fts.4gl"/>
       <File filePath="src/os.per"/>
       <File filePath="src/oss.4gl"/>
     </Library>

@@ -3,10 +3,12 @@
 
 &define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
 IMPORT FGL oss
+IMPORT FGL fts
 PUBLIC TYPE file RECORD
 		fileId INTEGER,
 		fileName STRING,
 		fileTypeId INTEGER,
+		fileTypeText STRING,
 		fileOSId INTEGER,
 		fileOSText STRING,
 		fileVerMajor SMALLINT,
@@ -22,9 +24,11 @@ END RECORD
 PUBLIC DEFINE m_file FILE
 DEFINE m_fail_reason STRING
 DEFINE m_oss oss
+DEFINE m_fts fts
 ----------------------------------------------------------------------------------------------------
-FUNCTION (this files) init( l_oss oss )
+FUNCTION (this files) init( l_oss oss, l_fts fts )
 	LET m_oss = l_oss
+	LET m_fts = l_fts
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this files) clearList()
@@ -46,6 +50,7 @@ FUNCTION (this files) add(
 	LET m_file.fileId = 0
 	LET m_file.fileName = l_fileName
 	LET m_file.fileTypeId = l_fileTypeId
+	LET m_file.fileTypeText = m_fts.list [l_fileTypeId].ftText
 	LET m_file.fileOSId = l_fileOSId
 	LET m_file.fileOSText =  m_oss.getTypeText(l_fileOSId)
 	LET m_file.fileVerMajor = l_fileVerMajor
