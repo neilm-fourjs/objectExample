@@ -1,5 +1,5 @@
 
--- Manager a simple List of Files
+-- Manager a simple List of File objects
 
 &define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
 
@@ -15,6 +15,10 @@ PUBLIC TYPE file RECORD
 DEFINE m_fail_reason STRING
 DEFINE m_file file
 DEFINE m_files DYNAMIC ARRAY OF FILE
+----------------------------------------------------------------------------------------------------
+FUNCTION (this file) init( l_file file ) RETURNS ()
+	LET this.* = l_file.*
+END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this file) add( ) RETURNS BOOLEAN
 	DEFINE x SMALLINT
@@ -67,4 +71,8 @@ END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this file) getLength() RETURNS INTEGER
 	RETURN m_files.getLength()
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION (this file) display()
+	DISPLAY BY NAME this.*
 END FUNCTION

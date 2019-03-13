@@ -1,5 +1,5 @@
 
--- Manager a simple List of m_oss
+-- Manager a simple List of OS objects.
 
 &define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
 
