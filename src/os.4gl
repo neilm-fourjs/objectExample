@@ -1,72 +1,71 @@
 
--- Manager a simple List of OSs
+-- Manager a simple List of m_oss
 
-&define FAIL(txt) LET fail_reason = txt RETURN FALSE
+&define FAIL(txt) LET m_fail_reason = txt RETURN FALSE
 
 PUBLIC TYPE os RECORD
 		osId INTEGER,
 		osType STRING,
 		osVersion STRING
 	END RECORD
-PUBLIC DEFINE m_os os
-DEFINE fail_reason STRING
-DEFINE oos DYNAMIC ARRAY OF os
+DEFINE m_fail_reason STRING
+DEFINE m_os os
+DEFINE m_oss DYNAMIC ARRAY OF os
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) add( ) RETURNS BOOLEAN
 	DEFINE x SMALLINT
-	LET fail_reason = ""
+	LET m_fail_reason = ""
 	IF this.osType IS NULL THEN FAIL("osType NULL") END IF
 	IF this.osVersion IS NULL THEN FAIL("osVersion NULL") END IF
 	IF this.osId != 0 THEN FAIL("id not 0") END IF
-	FOR x = 1 TO oos.getLength()
-		IF oos[x].osType = this.osType
-		AND oos[x].osVersion = this.osVersion THEN
+	FOR x = 1 TO m_oss.getLength()
+		IF m_oss[x].osType = this.osType
+		AND m_oss[x].osVersion = this.osVersion THEN
 			FAIL("Record already exists")
 		END IF
 	END FOR
-	CALL oos.appendElement()
-	LET this.osId = oos.getLength()
-	LET oos[ oos.getLength() ].* = this.*
+	CALL m_oss.appendElement()
+	LET this.osId = m_oss.getLength()
+	LET m_oss[ m_oss.getLength() ].* = this.*
+	LET m_os.* = this.*
 	RETURN TRUE
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) getById(l_id INTEGER) RETURNS BOOLEAN
 	DEFINE x SMALLINT
-	LET fail_reason = ""
+	LET m_fail_reason = ""
 	INITIALIZE this TO NULL
 	INITIALIZE m_os TO NULL
-	FOR x = 1 TO oos.getLength()
-		IF oos[x].osId = l_id THEN 
-			LET this.* = oos[x].*
+	FOR x = 1 TO m_oss.getLength()
+		IF m_oss[x].osId = l_id THEN 
+			LET this.* = m_oss[x].*
 			LET m_os.* = this.*
 			RETURN TRUE
 		END IF
 	END FOR
-	LET fail_reason = "Not Found"
-	RETURN FALSE
+	FAIL("Not Found")
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) existsID(l_id INTEGER) RETURNS BOOLEAN
 	DEFINE x SMALLINT
-	LET fail_reason = ""
-	FOR x = 1 TO oos.getLength()
-		IF oos[x].osId = l_id THEN RETURN TRUE END IF
+	LET m_fail_reason = ""
+	FOR x = 1 TO m_oss.getLength()
+		IF m_oss[x].osId = l_id THEN RETURN TRUE END IF
 	END FOR
-	LET fail_reason = "Not Found"
-	RETURN FALSE
+	FAIL("Not Found")
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) find(l_fld STRING, l_txt STRING) RETURNS BOOLEAN
 	DEFINE x SMALLINT
-	LET fail_reason = ""
+	LET m_fail_reason = ""
 	INITIALIZE this TO NULL
 	INITIALIZE m_os TO NULL
-	FOR x = 1 TO oos.getLength()
+	FOR x = 1 TO m_oss.getLength()
 		CASE l_fld.toLowerCase()
 			WHEN "ostype" 
-				IF oos[x].osType MATCHES l_txt THEN	LET this.* = oos[x].* EXIT FOR	END IF
+				IF m_oss[x].osType MATCHES l_txt THEN	LET this.* = m_oss[x].* EXIT FOR	END IF
 			WHEN "osversion" 
-				IF oos[x].osVersion MATCHES l_txt THEN LET this.* = oos[x].* EXIT FOR END IF
+				IF m_oss[x].osVersion MATCHES l_txt THEN LET this.* = m_oss[x].* EXIT FOR END IF
 			OTHERWISE FAIL("Invalid Field")
 		END CASE
 	END FOR
@@ -74,16 +73,15 @@ FUNCTION (this os) find(l_fld STRING, l_txt STRING) RETURNS BOOLEAN
 		LET m_os.* = this.*
  		RETURN TRUE
 	END IF
-	LET fail_reason = "Not Found"
-	RETURN FALSE
+	FAIL("Not Found")
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) getError() RETURNS STRING
-	RETURN fail_reason
+	RETURN m_fail_reason
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) getLength() RETURNS INTEGER
-	RETURN oos.getLength()
+	RETURN m_oss.getLength()
 END FUNCTION
 ----------------------------------------------------------------------------------------------------
 FUNCTION (this os) display()
