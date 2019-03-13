@@ -1,0 +1,34 @@
+
+LAYOUT (TEXT="File Controller")
+VBOX
+TABLE
+{
+[a001            ][a002               ]
+}
+END -- TABLE
+GRID
+{
+File Id:[f000   ]
+File:   [f001                     ]
+OS:     [f002          ]/[f003            ]
+}
+END -- GRID
+END -- VBOX
+
+ATTRIBUTES
+PHANTOM FORMONLY.a_fileId;
+a001 = FORMONLY.a_fileName, TITLE="Name";
+PHANTOM FORMONLY.a_osId;
+a002 = FORMONLY.a_fileOSText, TITLE="OS";
+
+f000 = FORMONLY.fileId;
+f001 = FORMONLY.fileName;
+PHANTOM FORMONLY.fileOSId;
+PHANTOM FORMONLY.fileOSText;
+
+PHANTOM FORMONLY.osId;
+f002 = FORMONLY.osType;
+f003 = FORMONLY.osVersion;
+
+INSTRUCTIONS
+SCREEN RECORD arr ( FORMONLY.a_fileId, FORMONLY.a_fileName, FORMONLY.a_osId, FORMONLY.a_fileOSText )
